@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import Navbar from './components/layout/Navbar';
 import Users from './components/users/Users';
 import Search from './components/users/Search';
+import Alert from  './components/layout/Alert';
 import axios from 'axios';
 import './App.css';
 
@@ -12,7 +13,8 @@ const SEARCH = `https://api.github.com/search/users?q=`;
 class App extends Component {
   state = {
     users: [],
-    loading: false
+    loading: false,
+    alert: null
   }
 
   
@@ -40,26 +42,31 @@ class App extends Component {
     this.setState({users: res.data.items, loading: false});
   }
 
+  // Set Alert
+  setAlert = (msg, type) => {
+    this.setState({alert: {msg: msg, type: type}});
+
+    setTimeout(() => this.setState({alert: null}), 4000);
+  }
+
   // ClearUser
 
   clearUsers = () => {
     this.setState({users: []});
   }
 
-  
-
   render(){
+
+    const {users, loading, alert} = this.state;
 
     return (
       <div className="App">
         <Navbar />
         <div className="container">
-          <Search busca={this.searchUser} clearUsers={this.clearUsers} showClear={this.state.users.length > 0? true: false} />
-          
-          <Users users={this.state.users} loading={this.state.loading}/>
-          
+          <Alert alert={alert} />
+          <Search busca={this.searchUser} clearUsers={this.clearUsers} showClear={users.length > 0? true: false} setAlert={this.setAlert} />
+          <Users users={users} loading={loading}/>
         </div>
-        
       </div>
     )
   }

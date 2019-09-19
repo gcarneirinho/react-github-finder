@@ -10,6 +10,7 @@ export class Search extends Component {
         busca: PropTypes.func.isRequired,
         clearUsers: PropTypes.func.isRequired,
         showClear: PropTypes.bool.isRequired,
+        setAlert: PropTypes.func.isRequired,
     }
 
     onTextChange = (e) => {
@@ -20,8 +21,15 @@ export class Search extends Component {
 
     onSubmit = (e) => {
         e.preventDefault();
-        this.props.busca(this.state.text);
-        this.setState({text: ""});
+
+        if(this.state.text === ''){
+            this.props.setAlert('Please enter something', 'light');
+        } else {
+            this.props.busca(this.state.text);
+            this.setState({text: ""});
+        }
+
+        
     }
 
     render() {
