@@ -5,6 +5,7 @@ export class User extends Component {
     // Get the login passed by props
     this.props.getUser(this.props.match.params.login);
   }
+
   render() {
     //console.log(this.props.getUser);
     const {
