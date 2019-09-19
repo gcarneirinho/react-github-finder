@@ -7,10 +7,14 @@ export class User extends Component {
   componentDidMount() {
     // Get the login passed by props
     this.props.getUser(this.props.match.params.login);
+    this.props.getUserRepos(this.props.match.login);
   }
 
   static propTypes = {
-    loading: PropTypes.bool.isRequired
+    loading: PropTypes.bool.isRequired,
+    user: PropTypes.object.isRequired,
+    getUser: PropTypes.func.isRequired,
+    getUserRepos: PropTypes.func.isRequired
   };
 
   render() {

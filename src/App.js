@@ -17,6 +17,7 @@ class App extends Component {
   state = {
     users: [],
     user: {},
+    repos: [],
     loading: false,
     alert: null
   };
@@ -31,6 +32,18 @@ class App extends Component {
     const res = await axios.get(link);
 
     this.setState({ users: res.data.items, loading: false });
+  };
+
+  // getUserRepos
+
+  getUserRepos = async userName => {
+    this.setState({ loading: true });
+
+    var link = `${LINK_USER}${userName}/repos?per_page=5&sort=created:asc&${AUTH}`;
+
+    const res = await axios.get(link);
+
+    this.setState({ repos: res.data, loading: false });
   };
 
   // ShowUser
@@ -58,7 +71,7 @@ class App extends Component {
   };
 
   render() {
-    const { users, loading, user, alert } = this.state;
+    const { users, loading, user, repos, alert } = this.state;
 
     return (
       <Router>
@@ -90,7 +103,9 @@ class App extends Component {
                   <User
                     {...props}
                     getUser={this.showUser}
+                    getUserRepos={this.getUserRepos}
                     user={user}
+                    repos={repos}
                     loading={this.state.loading}
                   />
                 )}
