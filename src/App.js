@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
 import Users from "./components/users/Users";
@@ -13,65 +13,65 @@ const AUTH = `client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=
 const LINK_USER = `https://api.github.com/users/`;
 const SEARCH = `https://api.github.com/search/users?q=`;
 
-class App extends Component {
-  state = {
-    users: [],
-    user: {},
-    repos: [],
-    loading: false,
-    alert: null
-  };
+const App = () => {
 
+  const [users, setUsers] = useState([]);
+  const [user, setUser] = useState({});
+  const [repos, setRepos] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState(null);
+  
   // Serch User
 
-  searchUser = async strBusca => {
-    this.setState({ loading: true });
+  const searchUser = async strBusca => {
+    setLoading(true);
 
     var link = `${SEARCH}${strBusca}&${AUTH}`;
 
     const res = await axios.get(link);
 
-    this.setState({ users: res.data.items, loading: false });
+    setUsers(res.data.items);
+    setLoading(false);
   };
 
   // getUserRepos
 
-  getUserRepos = async userName => {
-    this.setState({ loading: true });
+  const getUserRepos = async userName => {
+    setLoading(true);
 
     var link = `${LINK_USER}${userName}/repos?per_page=5&sort=created:asc&${AUTH}`;
 
     const res = await axios.get(link);
 
-    this.setState({ repos: res.data, loading: false });
+    setRepos(res.data);
+    setLoading(false);
   };
 
   // ShowUser
 
-  showUser = async login => {
-    this.setState({ loading: true });
+  const showUser = async login => {
+    setLoading(true);
 
     var link = `${LINK_USER}${login}?${AUTH}`;
     const res = await axios.get(link);
 
-    this.setState({ user: res.data, loading: false });
+    setUser(res.data);
+    setLoading(false);
   };
 
   // Set Alert
-  setAlert = (msg, type) => {
-    this.setState({ alert: { msg: msg, type: type } });
+  const showAlert = (msg, type) => {
+    setAlert({ msg: msg, type: type });
 
-    setTimeout(() => this.setState({ alert: null }), 4000);
+    setTimeout(() => setAlert({ alert: null }), 4000);
   };
 
   // ClearUser
 
-  clearUsers = () => {
-    this.setState({ users: [] });
+  const clearUsers = () => {
+    setUsers([]);
   };
 
-  render() {
-    const { users, loading, user, repos, alert } = this.state;
 
     return (
       <Router>
@@ -86,10 +86,10 @@ class App extends Component {
                 render={props => (
                   <Fragment>
                     <Search
-                      busca={this.searchUser}
-                      clearUsers={this.clearUsers}
+                      busca={searchUser}
+                      clearUsers={clearUsers}
                       showClear={users.length > 0 ? true : false}
-                      setAlert={this.setAlert}
+                      setAlert={showAlert}
                     />
                     <Users users={users} loading={loading} />
                   </Fragment>
@@ -102,11 +102,11 @@ class App extends Component {
                 render={props => (
                   <User
                     {...props}
-                    getUser={this.showUser}
-                    getUserRepos={this.getUserRepos}
+                    getUser={showUser}
+                    getUserRepos={getUserRepos}
                     user={user}
                     repos={repos}
-                    loading={this.state.loading}
+                    loading={loading}
                   />
                 )}
               />
@@ -115,7 +115,6 @@ class App extends Component {
         </div>
       </Router>
     );
-  }
 }
 
 export default App;
