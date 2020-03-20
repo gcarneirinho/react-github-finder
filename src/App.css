@@ -267,6 +267,7 @@ img {
 .alert-dark {
   background: var(--dark-color);
   color: #fff;
+  transition: .3s all linear;
 }
 
 .btn-danger,
@@ -296,6 +297,12 @@ img {
 
 .btn:hover {
   opacity: 0.8;
+}
+
+.btn-dark:hover {
+  opacity: 1;
+  background: black;
+  color: white;
 }
 
 .bg-light,
